@@ -1,19 +1,19 @@
 package be.ugent.mmlab.rml.condition.processor;
 
 import be.ugent.mmlab.rml.model.LogicalSource;
-import be.ugent.mmlab.rml.model.TermMap;
 import be.ugent.mmlab.rml.condition.model.Condition;
-import be.ugent.mmlab.rml.condition.model.EqualCondition;
+import be.ugent.mmlab.rml.condition.model.BooleanCondition;
 import be.ugent.mmlab.rml.condition.model.ProcessCondition;
 import be.ugent.mmlab.rml.condition.model.SplitCondition;
+import be.ugent.mmlab.rml.condition.model.conditionalTermMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openrdf.model.Value;
 
 /**
@@ -23,10 +23,17 @@ import org.openrdf.model.Value;
 public class ConditionProcessor {
     
     // Log
-    private static Log log = LogFactory.getLog(ConditionProcessor.class);
+    private static final Logger log = LogManager.getLogger(ConditionProcessor.class);
     
+    /**
+     *
+     * @param termMap
+     * @param value
+     * @param valueList
+     * @return
+     */
     public static List<String> postProcessTermMap(
-            TermMap termMap, String value, List<Value> valueList) {
+            conditionalTermMap termMap, String value, List<Value> valueList) {
         String[] list ;
         String split = termMap.getSplit();
         String process = termMap.getProcess();
@@ -87,14 +94,20 @@ public class ConditionProcessor {
         return stringList;
     }
     
-    public static List <String> processAllConditions(TermMap map, String value) {
+    /**
+     *
+     * @param map
+     * @param value
+     * @return
+     */
+    public static List <String> processAllConditions(conditionalTermMap map, String value) {
         HashSet<ProcessCondition> processConditions = map.getProcessConditions();
         HashSet<SplitCondition> splitConditions = map.getSplitConditions();
-        HashSet<EqualCondition> equalConditions = map.getEqualConditions();
-        List <String> result = new ArrayList<>();
+        HashSet<BooleanCondition> booleanConditions = map.getBooleanConditions();
+        List <String> result = new ArrayList<String>();
 
-        if (equalConditions.size() > 0) {
-            result.addAll(EqualConditionProcessor.processConditions(map, value));
+        if (booleanConditions.size() > 0) {
+            result.addAll(BooleanConditionProcessor.processConditions(map, value));
         }
         else if (processConditions.size() > 0){
             result.addAll(ProcessConditionProcessor.processConditions(map, value));
@@ -117,11 +130,11 @@ public class ConditionProcessor {
     public static List <String> processAllConditions(LogicalSource source, String value) {
         Set<ProcessCondition> processConditions = source.getProcessConditions();
         Set<SplitCondition> splitConditions = source.getSplitConditions();
-        Set<EqualCondition> equalConditions = source.getEqualConditions();
-        List <String> result = new ArrayList<>();
+        Set<BooleanCondition> booleanConditions = source.getBooleanConditions();
+        List <String> result = new ArrayList<String>();
 
-        if (equalConditions.size() > 0) {
-            result.addAll(EqualConditionProcessor.processConditions(source, value));
+        if (booleanConditions.size() > 0) {
+            result.addAll(BooleanConditionProcessor.processConditions(source, value));
         }
         else if (processConditions.size() > 0){
             result.addAll(ProcessConditionProcessor.processConditions(source, value));
@@ -135,6 +148,12 @@ public class ConditionProcessor {
         return result;
     }
     
+    /**
+     *
+     * @param nestedConditions
+     * @param value
+     * @return
+     */
     public static List<String> processAllNestedConditions(Set<Condition> nestedConditions, String value) {
         List<String> stringList = null, newStringList = new ArrayList<String>();
         for (Condition nestedCondition : nestedConditions) {
@@ -148,6 +167,12 @@ public class ConditionProcessor {
             return stringList;
     }
     
+    /**
+     *
+     * @param nestedCondition
+     * @param value
+     * @return
+     */
     public static List<String> processNestedCondition(Condition nestedCondition, String value) {
         List<String> stringList = new ArrayList<String>();
         
@@ -158,8 +183,8 @@ public class ConditionProcessor {
             case "StdSplitCondition":
                 stringList.addAll(SplitConditionProcessor.processCondition(nestedCondition, value));
                 break;
-            case "StdEqualCondition":
-                stringList.add(EqualConditionProcessor.processCondition(nestedCondition, value));
+            case "StdBooleanCondition":
+                stringList.add(BooleanConditionProcessor.processCondition(nestedCondition, value));
                 break;
             default:
                 log.error("unknown condition");
@@ -167,6 +192,12 @@ public class ConditionProcessor {
         return stringList;
     }
     
+    /**
+     *
+     * @param condition
+     * @param list
+     * @return
+     */
     public static List<String> processNestedConditions(Condition condition, List<String> list) {
         List<String> newStringList = new ArrayList<String>();
         Set<Condition> nestedConditions = condition.getNestedConditions();
