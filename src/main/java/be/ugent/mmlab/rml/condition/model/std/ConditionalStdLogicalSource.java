@@ -1,12 +1,10 @@
 package be.ugent.mmlab.rml.condition.model.std;
 
-import be.ugent.mmlab.rml.condition.model.BindCondition;
-import be.ugent.mmlab.rml.condition.model.BooleanCondition;
-import be.ugent.mmlab.rml.condition.model.ProcessCondition;
-import be.ugent.mmlab.rml.condition.model.SplitCondition;
-import be.ugent.mmlab.rml.input.model.InputSource;
+import be.ugent.mmlab.rml.condition.model.BindingCondition;
+import be.ugent.mmlab.rml.model.Source;
 import be.ugent.mmlab.rml.model.std.StdLogicalSource;
-import be.ugent.mmlab.rml.vocabulary.QLVocabulary;
+import be.ugent.mmlab.rml.vocabularies.QLVocabulary.QLTerm;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -15,11 +13,43 @@ import java.util.Set;
  * @author andimou
  */
 public class ConditionalStdLogicalSource extends StdLogicalSource{
-    public ConditionalStdLogicalSource(String iterator, InputSource inputSource, QLVocabulary.QLTerm referenceFormulation,
-            Set<BooleanCondition> booleanCondition, Set<ProcessCondition> processCondition,
-            Set<SplitCondition> splitCondition, Set<BindCondition> bindCondition) {
-        super(iterator, inputSource, referenceFormulation,
-            booleanCondition, processCondition, splitCondition, bindCondition);
+
+    private Set<BindingCondition> bindConditions;
+    
+    /**
+     *
+     * @param iterator
+     * @param inputSource
+     * @param referenceFormulation
+     * @param booleanCondition
+     * @param processCondition
+     * @param splitCondition
+     * @param bindCondition
+     */
+    
+    
+    public ConditionalStdLogicalSource(String iterator, Source inputSource, QLTerm referenceFormulation,
+            Set<BindingCondition> bindCondition) {
+        
+        super(iterator, inputSource,referenceFormulation);        
+        setBindConditions(bindCondition);
+    }
+
+    public ConditionalStdLogicalSource(String iterator, Source inputSource, QLTerm referenceFormulation) {
+        super(iterator, inputSource,referenceFormulation);
+    }
+
+    private void setBindConditions(Set<BindingCondition> bindConditions) {
+        this.bindConditions = new HashSet<BindingCondition>();
+        this.bindConditions.addAll(bindConditions);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Set<BindingCondition> getBindConditions() {
+        return this.bindConditions;
     }
 
 }

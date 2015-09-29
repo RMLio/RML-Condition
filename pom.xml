@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>be.ugent.mmlab</groupId>
-    <artifactId>RML-Condition</artifactId>
+    <groupId>be.ugent.mmlab.rml</groupId>
+    <artifactId>RML-BindingCondition</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>RML - Condition</name>
+    <name>RML - Binding Condition</name>
     <url>http://github.org/rmlio/rml-condition</url>
 
     <properties>
@@ -43,14 +43,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>be.ugent.mmlab</groupId>
+            <groupId>be.ugent.mmlab.rml</groupId>
             <artifactId>RML-Model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>be.ugent.mmlab</groupId>
-            <artifactId>RML-Processor</artifactId>
-            <version>0.1</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.12</version>
         </dependency>
     </dependencies>
 
