@@ -25,7 +25,7 @@ abstract public interface Condition {
      *
      * @return
      */
-    public String getValue();
+    public String getReference();
     
     /**
      *
@@ -38,5 +38,9 @@ abstract public interface Condition {
      * @return
      */
     public ReferencingObjectMap getReferencingObjectMap();
+    
+    public Set<BindingCondition> getBindingConditions();
+    
+    public void setBindingConditions(Set<BindingCondition> nestedConditions);
     
 }

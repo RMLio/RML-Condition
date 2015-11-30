@@ -1,5 +1,6 @@
 package be.ugent.mmlab.rml.condition.model.std;
 
+import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.model.RDFTerm.ReferencingObjectMap;
 import java.util.Set;
@@ -17,15 +18,26 @@ public class StdCondition {
     private static final Logger log = 
             LogManager.getLogger(StdCondition.class);
     
+    protected String reference;
     protected String condition;
-    protected String value;
+    
     protected Set<Condition> nestedConditions ;
+    protected Set<BindingCondition> bindingConditions ;
     protected ReferencingObjectMap refObjMap;
     
     /**
      *
-     * @param condition
+     * @param reference
      */
+    protected void setReference(String reference) {
+        if (reference == null) {
+            log.error(
+                    "A condition must "
+                    + "have a condition value.");
+        }
+        this.reference = reference;
+    }
+    
     protected void setCondition(String condition) {
         if (condition == null) {
             log.error(
@@ -43,6 +55,10 @@ public class StdCondition {
         this.nestedConditions = nestedConditions;
     }
     
+    public void setBindingConditions(Set<BindingCondition> nestedConditions) {
+        this.bindingConditions = bindingConditions;
+    }
+    
     protected void setReferencingObjectMap(ReferencingObjectMap refObjMap){
         this.refObjMap = refObjMap;
     }
@@ -53,6 +69,10 @@ public class StdCondition {
      */
     public Set<Condition> getNestedConditions() {
         return nestedConditions;
+    }
+    
+    public Set<BindingCondition> getBindingConditions() {
+        return bindingConditions;
     }
     
     /**
@@ -67,8 +87,8 @@ public class StdCondition {
      *
      * @return
      */
-    public String getValue() {
-        return value;
+    public String getReference() {
+        return reference;
     }   
     
     /**

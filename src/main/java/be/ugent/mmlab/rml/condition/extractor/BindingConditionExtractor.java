@@ -3,7 +3,6 @@ package be.ugent.mmlab.rml.condition.extractor;
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.std.StdBindingCondition;
 import be.ugent.mmlab.rml.vocabularies.CRMLVocabulary;
-import be.ugent.mmlab.rml.vocabularies.RMLVocabulary;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +23,7 @@ import org.openrdf.repository.RepositoryResult;
  *
  * @author andimou
  */
-public class BindingConditionExtractor extends ConditionExtractor {
+public class BindingConditionExtractor extends StdConditionExtractor {
     
     //Log
     private static final Logger log = 
@@ -34,7 +33,7 @@ public class BindingConditionExtractor extends ConditionExtractor {
             Repository repository, Resource object) {
 
         Set<BindingCondition> result = new HashSet<BindingCondition>();
-        List<String> values = new ArrayList<String>();
+        List<String> variables = new ArrayList<String>();
 
         log.debug("Extracting Binding Conditions..");
         
@@ -50,75 +49,33 @@ public class BindingConditionExtractor extends ConditionExtractor {
         
             while (statements.hasNext()) {
                 Statement statement = statements.next();
-                log.debug("Binding Statement " + statement);
-                values = extractVariable(
+                variables = extractVariable(
                         repository, object, statement);
-                log.debug("Binding condition values " + values);
                 String reference = extractReference(
                         repository, object, statement);
-                log.debug("Binding condition reference " + reference);
 
-
-                for (String value : values) {
-                    if (value == null) {
+                for (String variable : variables) {
+                    if (variable == null) {
                         log.error(object.stringValue()
                                 + " must have exactly two properties"
                                 + " condition and value. ");
                     }
                     try {
-                        result.add(new StdBindingCondition(null, value, reference, null));
+                        result.add(new StdBindingCondition(variable, reference));
                     } catch (Exception ex) {
                         log.error(ex);
                     }
                 }
             }
         } catch (ClassCastException e) {
-            log.error(Thread.currentThread().getStackTrace()[1].getMethodName() + ": "
-                    + "A resource was expected in object of predicateMap of "
+            log.error("A resource was expected in object of predicateMap of "
                     + object.stringValue());
         } catch (RepositoryException ex) {
             log.error("Repository Exception " + ex);
         }
-        log.debug("Extract bind condition done.");
         return result;
     }
-    
-    /**
-     *
-     * @param rmlMappingGraph
-     * @param object
-     * @param statement
-     * @return
-     */
-    //TODO: Replace the following with a Reference Map
-    public static String extractReference(
-            Repository repository, Resource object, Statement statement) {
-        String reference = null;
-        
-        try {
-            //assigns current boolean condtion
-            Resource values = (Resource) statement.getObject();
-            RepositoryConnection connection = repository.getConnection();
-            ValueFactory vf = connection.getValueFactory();
-            //retrieves value
-            URI p = vf.createURI(RMLVocabulary.RML_NAMESPACE 
-                    + RMLVocabulary.RMLTerm.REFERENCE);
-            RepositoryResult<Statement> statements = 
-                    connection.getStatements(values, p, null, true);
 
-            while(statements.hasNext()) {
-                Statement valueStatement = statements.next();
-                reference = valueStatement.getObject().stringValue();
-            }
- 
-        }catch (ClassCastException e) {
-            log.error(Thread.currentThread().getStackTrace()[1].getMethodName() + ": "
-                    + "A valid value was expected "
-                    + object.stringValue());
-        } finally {
-            return reference;
-        }
-    }
     
     public static List<String> extractVariable(
             Repository repository, Resource object, Statement statement) {
