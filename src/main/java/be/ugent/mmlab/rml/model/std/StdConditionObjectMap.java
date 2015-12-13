@@ -25,24 +25,23 @@ import org.openrdf.model.Value;
  */
 public class StdConditionObjectMap extends StdObjectMap implements TermMap, ObjectMap {
     private Set<Condition> conditions;
-
+    
     // Log
     private static final Logger log = 
             LoggerFactory.getLogger(StdConditionObjectMap.class);
-    private PredicateObjectMap predicateObjectMap;
 
     public StdConditionObjectMap(TriplesMap triplesMap, PredicateObjectMap predicateObjectMap,
             Value constantValue, URI dataType, String languageTag,
             String stringTemplate, URI termType, String inverseExpression,
-            ReferenceMap referenceValue, Set<Condition> booleanCondition) {
+            ReferenceMap referenceValue, Set<Condition> condition) {
         super(triplesMap, predicateObjectMap, constantValue, dataType, languageTag,
                 stringTemplate, termType, inverseExpression, referenceValue);
-        setCondition(booleanCondition);
+        setCondition(condition);
     }
     
     protected final void setCondition(Set<Condition> booleanConditions){
         this.conditions = booleanConditions;
-    }
+}
     
     public Set<Condition> getConditions(){
         return this.conditions;

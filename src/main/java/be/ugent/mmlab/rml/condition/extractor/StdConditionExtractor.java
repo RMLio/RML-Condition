@@ -157,6 +157,12 @@ public class StdConditionExtractor implements ConditionExtractor {
                     p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
                             + CRMLVocabulary.cRMLTerm.BOOLEAN_CONDITION);
                     break;
+               case "NegationConditionExtractor":
+                    log.debug("Extracting Negation Conditions..");
+                    // Extract negation condition
+                    p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
+                            + CRMLVocabulary.cRMLTerm.NEGATION_CONDITION);
+                    break;
                case "ProcessConditionExtractor":
                     log.debug("Extracting Processing Conditions..");
                     // Extract processing condition
