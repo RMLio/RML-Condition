@@ -17,14 +17,14 @@ public class ConditionReferencingObjectMap extends StdReferencingObjectMap{
     
     public ConditionReferencingObjectMap(PredicateObjectMap predicateObjectMap,
             TriplesMap parentTriplesMap, Set<JoinCondition> joinConditions, 
-            Set<Condition> bindingConditions) {
+            Set<Condition> conditions) {
         super(predicateObjectMap, parentTriplesMap, joinConditions);
-        setConditions(bindingConditions);
+        setConditions(conditions);
     }
     
     protected final void setConditions(
-            Set<Condition> bindingConditions){
-        this.conditions = bindingConditions;
+            Set<Condition> conditions){
+        this.conditions = conditions;
     }
     
     public Set<Condition> getConditions(){
