@@ -54,6 +54,8 @@ public class StdConditionProcessor implements ConditionProcessor {
                     }
                 } else if (expression.contains("match")) {
                     result = processMatch(expression);
+                    if(condition.getClass().getSimpleName().equals("StdNegationCondition"))
+                        return !result;
                 } else if (expression.contains("!contains")) {
                     result = processNotContains(expression);
                     if (!result) {
@@ -61,6 +63,11 @@ public class StdConditionProcessor implements ConditionProcessor {
                     }
                 } else if (expression.contains("!length")) {
                     result = processNotLength(expression);
+                    if (!result) {
+                        break iter;
+                    }
+                }else if (expression.contains("hasField")) {
+                    result = processHasField(expression);
                     if (!result) {
                         break iter;
                     }
@@ -87,7 +94,7 @@ public class StdConditionProcessor implements ConditionProcessor {
         return parameters;
     }
     
-    //TODO: Move it separately
+    //TODO: Move them separately
     public boolean processMatch(String expression){
         expression = expression.replace("match(", "").replace(")", "");
         String[] strings = expression.split(",");
@@ -151,5 +158,15 @@ public class StdConditionProcessor implements ConditionProcessor {
             }
         }
         return true;
+    }
+    
+    public boolean processHasField(String expression) {
+        expression = expression.replace("hasField(", "").replace(")", "");
+        log.info("expression " + expression);
+        if (expression != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

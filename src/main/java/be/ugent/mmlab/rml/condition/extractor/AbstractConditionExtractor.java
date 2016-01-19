@@ -55,7 +55,6 @@ public class AbstractConditionExtractor {
                 //Add Boolean Conditions to the total
                 if (booleanConditions != null && booleanConditions.size() > 0) {
                     conditions.addAll(booleanConditions);
-                    log.debug("conditions " + conditions.size());
                     log.debug("Boolean Conditions were extracted");
                 }
             } catch (Exception ex) {
@@ -63,6 +62,21 @@ public class AbstractConditionExtractor {
             }
 
             //Extract Negation Conditions
+            try {
+                StdConditionExtractor conditionsExtractor =
+                        new NegationConditionExtractor();
+                Set<Condition> negationConditions =
+                        conditionsExtractor.extractCondition(
+                        repository, conditions, (Resource) object);
+
+                //Add Boolean Conditions to the total
+                if (negationConditions != null && negationConditions.size() > 0) {
+                    conditions.addAll(negationConditions);
+                    log.debug("Negation Conditions were extracted");
+                }
+            } catch (Exception ex) {
+                log.error("Exception " + ex + " because of Negation Conditions");
+            }
             
             //Extract Process Conditions
             

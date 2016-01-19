@@ -3,6 +3,7 @@ package be.ugent.mmlab.rml.condition.extractor;
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.condition.model.std.StdBooleanCondition;
+import be.ugent.mmlab.rml.condition.model.std.StdNegationCondition;
 import be.ugent.mmlab.rml.vocabularies.CRMLVocabulary;
 import be.ugent.mmlab.rml.vocabularies.RMLVocabulary;
 import java.util.ArrayList;
@@ -137,17 +138,12 @@ public class StdConditionExtractor implements ConditionExtractor {
     @Override
     public Set<Condition> extractCondition(Repository repository, 
         Set<Condition> conditions, Resource object) {
-        //Set<Condition> result = null;
                 
         try {
-            //extract boolean condition
             RepositoryConnection connection = repository.getConnection();
+            //extract boolean condition
             ValueFactory vf = connection.getValueFactory();
             String value; URI p = null;
-            //result = new HashSet<Condition>();
-            List<String> conditionExpressions = new ArrayList<String>(); 
-            //        values = new ArrayList<String>();
-
             String conditionType = this.getClass().getSimpleName();
             
             switch (conditionType) {
@@ -156,12 +152,16 @@ public class StdConditionExtractor implements ConditionExtractor {
                     // Extract boolean condition
                     p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
                             + CRMLVocabulary.cRMLTerm.BOOLEAN_CONDITION);
+                    extractBooleanCondition(
+                            connection, repository, p, object,conditions);
                     break;
                case "NegationConditionExtractor":
                     log.debug("Extracting Negation Conditions..");
                     // Extract negation condition
                     p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
                             + CRMLVocabulary.cRMLTerm.NEGATION_CONDITION);
+                    extractBooleanCondition(
+                            connection, repository, p, object,conditions);
                     break;
                case "ProcessConditionExtractor":
                     log.debug("Extracting Processing Conditions..");
@@ -171,50 +171,69 @@ public class StdConditionExtractor implements ConditionExtractor {
                     break;
             }
             
-            RepositoryResult<Statement> statements = 
-                connection.getStatements(object, p, null, true);
-            
-            try {
-                while (statements.hasNext()) {
-                    Statement statement = statements.next();
-                    
-                    conditionExpressions = 
-                            extractExpression(repository, object, statement);
-                    
-                    log.debug("Extracting nested Binding Conditions...");
-                    BindingConditionExtractor bindingConditionsExtractor =
-                            new BindingConditionExtractor();
-                    Set<BindingCondition> bindingConditions =
-                            bindingConditionsExtractor.extractBindCondition(
-                            repository, (Resource) statement.getObject());
-                    
-                    for (String conditionExpression : conditionExpressions) {
-                        if (bindingConditions == null || conditionExpression == null) {
-                            log.error("Error: " + object.stringValue()
-                                    + " must have condition and bindingConditions. ");
-                        }
-                        extractConditionDetails(conditions, bindingConditions, 
-                                conditionExpression, object);
-                    }
-                }
-            } catch (ClassCastException e) {
-                log.error("Class cast exception " + 
-                        "A resource was expected in object of predicateMap of "
-                        + object.stringValue());
-            } 
-            
         } catch (RepositoryException ex) {
             log.error("Repository Exception " + ex);
         }
         return conditions;
     }
     
-    public void extractConditionDetails(Set<Condition> conditions, 
-            Set<BindingCondition> bindingConditions, String conditionExpression, 
-            Resource object) {
+    private void extractBooleanCondition(RepositoryConnection connection, 
+            Repository repository, URI p, Resource object, Set<Condition> conditions) {
+        List<String> conditionExpressions = new ArrayList<String>(); 
         
         try {
-            StdBooleanCondition newCondition =
+            RepositoryResult<Statement> statements =
+                    connection.getStatements(object, p, null, true);
+            while (statements.hasNext()) {
+                Statement statement = statements.next();
+
+                conditionExpressions =
+                        extractExpression(repository, object, statement);
+                Set<BindingCondition> bindingConditions =
+                        extractNestedBindingCondition(
+                        repository, statement);
+
+                for (String conditionExpression : conditionExpressions) {
+                    if (bindingConditions == null || conditionExpression == null) {
+                        log.error("Error: " + object.stringValue()
+                                + " must have condition and bindingConditions. ");
+                    }
+                    extractConditionDetails(conditions, bindingConditions,
+                            conditionExpression, p, object);
+                }
+            }
+        } catch (ClassCastException e) {
+            log.error("Class cast exception "
+                    + "A resource was expected in object of predicateMap of "
+                    + object.stringValue());
+        } catch (RepositoryException ex) {
+            log.error("Repository Exception " + ex);
+        }
+        
+    }
+    
+    Set<BindingCondition> extractNestedBindingCondition(
+            Repository repository, Statement statement) {
+        log.debug("Extracting nested Binding Conditions...");
+        BindingConditionExtractor bindingConditionsExtractor =
+                new BindingConditionExtractor();
+        Set<BindingCondition> bindingConditions =
+                bindingConditionsExtractor.extractBindCondition(
+                repository, (Resource) statement.getObject());
+        return bindingConditions;
+    }
+    
+    public void extractConditionDetails(Set<Condition> conditions, 
+            Set<BindingCondition> bindingConditions, String conditionExpression, 
+            URI p, Resource object) {
+        Condition newCondition;
+        try {
+            if(p.toString().equals(CRMLVocabulary.CRML_NAMESPACE
+                            + CRMLVocabulary.cRMLTerm.NEGATION_CONDITION))
+                newCondition =
+                    new StdNegationCondition(conditionExpression, bindingConditions);
+            else
+                newCondition =
                     new StdBooleanCondition(conditionExpression, bindingConditions);
             conditions.add(newCondition);
         } catch (Exception ex) {
