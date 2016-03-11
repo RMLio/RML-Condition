@@ -28,7 +28,7 @@ public class StdConditionObjectMap extends StdObjectMap implements TermMap, Obje
     
     // Log
     private static final Logger log = 
-            LoggerFactory.getLogger(StdConditionObjectMap.class);
+            LoggerFactory.getLogger(StdConditionObjectMap.class.getSimpleName());
 
     public StdConditionObjectMap(TriplesMap triplesMap, PredicateObjectMap predicateObjectMap,
             Value constantValue, URI dataType, String languageTag,

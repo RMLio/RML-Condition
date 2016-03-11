@@ -18,7 +18,8 @@ public class AbstractConditionExtractor {
 
     //Log
     private static final Logger log =
-            LogManager.getLogger(AbstractConditionExtractor.class);
+            LogManager.getLogger(
+            AbstractConditionExtractor.class.getSimpleName());
 
     public static Set<Condition> extractConditions(
             Repository repository, Resource object) {

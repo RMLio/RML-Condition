@@ -15,7 +15,7 @@ public class StdJoinConditionMetric extends StdJoinCondition {
     
     // Log
     private static final Logger log = 
-            LoggerFactory.getLogger(StdJoinConditionMetric.class);
+            LoggerFactory.getLogger(StdJoinConditionMetric.class.getSimpleName());
     private Resource metric;
     
     public StdJoinConditionMetric(String child, String parent, Resource metric) {

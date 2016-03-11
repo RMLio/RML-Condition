@@ -27,7 +27,7 @@ public class BindingConditionExtractor extends StdConditionExtractor {
     
     //Log
     private static final Logger log = 
-            LogManager.getLogger(BindingConditionExtractor.class);
+            LogManager.getLogger(BindingConditionExtractor.class.getSimpleName());
     
     public static Set<BindingCondition> extractBindCondition(
             Repository repository, Resource object) {

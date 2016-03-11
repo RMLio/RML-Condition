@@ -21,7 +21,7 @@ public class StdConditionProcessor implements ConditionProcessor {
     
     // Log
     private static final Logger log = 
-            LoggerFactory.getLogger(StdConditionProcessor.class);
+            LoggerFactory.getLogger(StdConditionProcessor.class.getSimpleName());
 
     @Override
     public boolean processConditions(Object node, TermMapProcessor termMapProcessor, 
@@ -29,7 +29,7 @@ public class StdConditionProcessor implements ConditionProcessor {
         Set<BindingCondition> bindings = new HashSet<BindingCondition>();
         Map<String, String> parameters;
         boolean result = false;
-
+        
         iter: for (Condition condition : conditions) {
             if(condition.getClass().getSimpleName().equals("StdBindingCondition")){
                 continue;
@@ -39,12 +39,14 @@ public class StdConditionProcessor implements ConditionProcessor {
             bindings = condition.getBindingConditions();
             
             for (BindingCondition binding : bindings) {
+                String replacement;
                 parameters = processBindingConditions(node, termMapProcessor, bindings);
 
-                String replacement = parameters.get(binding.getVariable());
+                if(parameters.size() > 0){
+                    replacement = parameters.get(binding.getVariable());
                 expression = expression.replaceAll(
                         "%%" + Pattern.quote(binding.getVariable()) + "%%",
-                        replacement);
+                        replacement);}
 
                 //TODO: Properly handle the followings...
                 if (expression.contains("!match")) {
@@ -67,10 +69,14 @@ public class StdConditionProcessor implements ConditionProcessor {
                         break iter;
                     }
                 }else if (expression.contains("hasField")) {
-                    result = processHasField(expression);
-                    if (!result) {
-                        break iter;
-                    }
+                    if(parameters.size()==0)
+                        return false;
+                    else
+                        return true;
+                    //result = processHasField(expression);
+                    //if (!result) {
+                    //    break iter;
+                    //}
                 }
             }
         }
@@ -162,7 +168,7 @@ public class StdConditionProcessor implements ConditionProcessor {
     
     public boolean processHasField(String expression) {
         expression = expression.replace("hasField(", "").replace(")", "");
-        log.info("expression " + expression);
+        
         if (expression != null) {
             return true;
         } else {

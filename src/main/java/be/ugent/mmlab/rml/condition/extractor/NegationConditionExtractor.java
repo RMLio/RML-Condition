@@ -7,5 +7,5 @@ package be.ugent.mmlab.rml.condition.extractor;
  * @author andimou
  */
 public class NegationConditionExtractor extends StdConditionExtractor{
-
+//TODO: Turn this into interface?
 }

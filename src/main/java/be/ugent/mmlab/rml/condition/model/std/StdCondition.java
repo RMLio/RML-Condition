@@ -16,7 +16,7 @@ public class StdCondition {
     
     // Log
     private static final Logger log = 
-            LogManager.getLogger(StdCondition.class);
+            LogManager.getLogger(StdCondition.class.getSimpleName());
     
     protected String reference;
     protected String condition;
