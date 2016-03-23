@@ -61,6 +61,7 @@ public class StdBooleanCondition extends StdCondition implements BooleanConditio
         this.reference = value;
     }
     
+    @Override
     public Set<BindingCondition> getBinding() {
         return this.bindingConditions;
     } 

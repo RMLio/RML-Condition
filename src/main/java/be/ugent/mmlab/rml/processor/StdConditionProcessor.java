@@ -44,8 +44,8 @@ public class StdConditionProcessor implements ConditionProcessor {
 
                 if(parameters.size() > 0){
                     replacement = parameters.get(binding.getVariable());
-                expression = expression.replaceAll(
-                        "%%" + Pattern.quote(binding.getVariable()) + "%%",
+                    expression = expression.replaceAll(
+                            "%%" + Pattern.quote(binding.getVariable()) + "%%",
                         replacement);}
 
                 //TODO: Properly handle the followings...
@@ -86,7 +86,7 @@ public class StdConditionProcessor implements ConditionProcessor {
     public Map<String, String> processBindingConditions(Object node, 
             TermMapProcessor termMapProcessor, Set<BindingCondition> bindingConditions) {
         Map<String, String> parameters = new HashMap<String, String>();
-        ;
+        
         for (BindingCondition bindingCondition : bindingConditions) {
             List<String> childValues = termMapProcessor.
                     extractValueFromNode(node, bindingCondition.getReference());
