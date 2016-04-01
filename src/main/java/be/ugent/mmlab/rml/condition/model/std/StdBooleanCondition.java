@@ -3,6 +3,7 @@ package be.ugent.mmlab.rml.condition.model.std;
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.condition.model.BooleanCondition;
+import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -16,7 +17,9 @@ public class StdBooleanCondition extends StdCondition implements BooleanConditio
     
     // Log
     private static final Logger log = 
-            LogManager.getLogger(StdBooleanCondition.class);
+            LogManager.getLogger(StdBooleanCondition.class.getSimpleName());
+    
+    private PredicateObjectMap fallback;
     
     /**
      *
@@ -68,6 +71,16 @@ public class StdBooleanCondition extends StdCondition implements BooleanConditio
     
     public void setNestedBindingConditions(Set<BindingCondition> bindingConditions) {
         this.bindingConditions = bindingConditions;
+    }
+    
+    @Override
+    public PredicateObjectMap getFallback() {
+        return this.fallback;
+    }
+    
+    @Override
+    public void setFallback(PredicateObjectMap fallback){
+        this.fallback = fallback;
     }
     
 }

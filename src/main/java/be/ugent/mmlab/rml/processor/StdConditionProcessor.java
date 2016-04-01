@@ -3,6 +3,7 @@ package be.ugent.mmlab.rml.processor;
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
+import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +30,7 @@ public class StdConditionProcessor implements ConditionProcessor {
         Set<BindingCondition> bindings = new HashSet<BindingCondition>();
         Map<String, String> parameters;
         boolean result = false;
-        
+        log.debug("There are " + conditions.size() + " conditions...");
         iter: for (Condition condition : conditions) {
             if(condition.getClass().getSimpleName().equals("StdBindingCondition")){
                 continue;
@@ -37,7 +38,7 @@ public class StdConditionProcessor implements ConditionProcessor {
             String expression = condition.getCondition();
             log.debug("expression " + expression);
             bindings = condition.getBindingConditions();
-            
+            log.debug("There are " + bindings.size() + " bindings.");
             for (BindingCondition binding : bindings) {
                 String replacement;
                 parameters = processBindingConditions(node, termMapProcessor, bindings);
@@ -58,7 +59,7 @@ public class StdConditionProcessor implements ConditionProcessor {
                     result = processMatch(expression);
                     if(condition.getClass().getSimpleName().equals("StdNegationCondition"))
                         return !result;
-                } else if (expression.contains("!contains")) {
+                } else if (expression.contains("!contain(Condition condition)")) {
                     result = processNotContains(expression);
                     if (!result) {
                         break iter;
@@ -98,6 +99,16 @@ public class StdConditionProcessor implements ConditionProcessor {
         }
 
         return parameters;
+    }
+    
+    /**
+     *
+     * @param condition
+     * @return
+     */
+    @Override
+    public PredicateObjectMap processFallback(Condition condition) {
+        return condition.getFallback();
     }
     
     //TODO: Move them separately

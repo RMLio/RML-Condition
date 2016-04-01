@@ -49,27 +49,26 @@ public class AbstractConditionExtractor {
                 //Extract Boolean Conditions
                 StdConditionExtractor conditionsExtractor =
                         new BooleanConditionExtractor();
-                Set<Condition> booleanConditions =
+                Condition booleanCondition = 
                         conditionsExtractor.extractCondition(
-                        repository, conditions, (Resource) object);
-                log.debug("booleanConditions " + booleanConditions);
-                //Add Boolean Conditions to the total
-                if (booleanConditions != null && booleanConditions.size() > 0) {
-                    conditions.addAll(booleanConditions);
-                    log.debug("Boolean Conditions were extracted");
-                }
+                        repository, conditions, object);
+                
+                if(booleanCondition != null)
+                    conditions.add(booleanCondition);
             } catch (Exception ex) {
                 log.error("Exception " + ex + " because of Boolean Conditions");
             }
 
             //Extract Negation Conditions
-            try {
+            /*try {
                 StdConditionExtractor conditionsExtractor =
                         new NegationConditionExtractor();
-                Set<Condition> negationConditions =
+                //Set<Condition> negationConditions =
+                Condition negationCondition =
                         conditionsExtractor.extractCondition(
                         repository, conditions, (Resource) object);
-
+                if(negationCondition != null)
+                conditions.add(negationCondition);
                 //Add Boolean Conditions to the total
                 if (negationConditions != null && negationConditions.size() > 0) {
                     conditions.addAll(negationConditions);
@@ -77,7 +76,7 @@ public class AbstractConditionExtractor {
                 }
             } catch (Exception ex) {
                 log.error("Exception " + ex + " because of Negation Conditions");
-            }
+            }*/
             
             //Extract Process Conditions
             

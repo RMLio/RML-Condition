@@ -2,6 +2,7 @@ package be.ugent.mmlab.rml.condition.model.std;
 
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
+import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -78,5 +79,16 @@ public class StdBindingCondition extends StdCondition implements BindingConditio
     public String getVariable() {
         return this.variable;
     }    
+
+    @Override
+    public PredicateObjectMap getFallback() {
+        log.error("Not supported yet."); 
+        return null;
+    }
+
+    @Override
+    public void setFallback(PredicateObjectMap predicateObjectMap) {
+        log.debug("Not supported yet."); 
+    }
     
 }

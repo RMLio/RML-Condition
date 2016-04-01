@@ -11,7 +11,14 @@ import org.openrdf.repository.Repository;
  */
 public interface ConditionExtractor {
     
-    public Set<Condition> extractCondition(
+    /**
+     *
+     * @param repository
+     * @param condition
+     * @param object
+     * @return
+     */
+    public Condition extractCondition(
             Repository repository, Set<Condition> condition, Resource object);
     
 }

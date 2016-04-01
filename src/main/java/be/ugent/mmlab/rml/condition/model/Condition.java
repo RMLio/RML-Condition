@@ -1,5 +1,6 @@
 package be.ugent.mmlab.rml.condition.model;
 
+import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import be.ugent.mmlab.rml.model.RDFTerm.ReferencingObjectMap;
 import java.util.Set;
 
@@ -39,8 +40,28 @@ abstract public interface Condition {
      */
     public ReferencingObjectMap getReferencingObjectMap();
     
+    /**
+     *
+     * @return
+     */
     public Set<BindingCondition> getBindingConditions();
     
+    /**
+     *
+     * @param nestedConditions
+     */
     public void setBindingConditions(Set<BindingCondition> nestedConditions);
+    
+    /**
+     *
+     * @return
+     */
+    public PredicateObjectMap getFallback();
+    
+    /**
+     *
+     * @param predicateObjectMap
+     */
+    public void setFallback(PredicateObjectMap predicateObjectMap);
     
 }
