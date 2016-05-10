@@ -3,6 +3,7 @@ package be.ugent.mmlab.rml.model.std;
 import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.model.JoinCondition;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
+import be.ugent.mmlab.rml.model.RDFTerm.ReferencingObjectMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import java.util.Set;
 
@@ -19,6 +20,13 @@ public class ConditionReferencingObjectMap extends StdReferencingObjectMap{
             TriplesMap parentTriplesMap, Set<JoinCondition> joinConditions, 
             Set<Condition> conditions) {
         super(predicateObjectMap, parentTriplesMap, joinConditions);
+        setConditions(conditions);
+    }
+    
+    public ConditionReferencingObjectMap(PredicateObjectMap predicateObjectMap,
+            TriplesMap parentTriplesMap, Set<JoinCondition> joinConditions, 
+            Set<Condition> conditions, Set<ReferencingObjectMap> fallbackReferencingObjectMaps) {
+        super(predicateObjectMap, parentTriplesMap, joinConditions, fallbackReferencingObjectMaps);
         setConditions(conditions);
     }
     

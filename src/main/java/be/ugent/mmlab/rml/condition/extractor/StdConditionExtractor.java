@@ -6,7 +6,6 @@ import be.ugent.mmlab.rml.condition.model.std.StdBooleanCondition;
 import be.ugent.mmlab.rml.condition.model.std.StdNegationCondition;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import be.ugent.mmlab.rml.vocabularies.CRMLVocabulary;
-import be.ugent.mmlab.rml.vocabularies.R2RMLVocabulary;
 import be.ugent.mmlab.rml.vocabularies.RMLVocabulary;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -310,7 +309,7 @@ public class StdConditionExtractor implements ConditionExtractor {
      * @return
      */
     public static List<Value> extractFallback(
-            Repository repository, Resource object, Condition condition) {
+            Repository repository, Resource object) {
         List<Value> listValues = new ArrayList<Value>();
 
         try {
@@ -322,7 +321,6 @@ public class StdConditionExtractor implements ConditionExtractor {
                     CRMLVocabulary.CRML_NAMESPACE 
                     + CRMLVocabulary.cRMLTerm.FALLBACK);
 
-            //log.debug("condition is " + condition.toString());
             RepositoryResult<Statement> statements = 
                     connection.getStatements(object, p, null, true);
 
