@@ -118,7 +118,7 @@ public class StdConditionExtractor implements ConditionExtractor {
             //retrieves value
             URI p = vf.createURI(
                     CRMLVocabulary.CRML_NAMESPACE 
-                    + CRMLVocabulary.cRMLTerm.EXPRESSION);
+                    + CRMLVocabulary.cRMLTerm.CONDITION);
 
             RepositoryResult<Statement> statements = 
                     connection.getStatements(object, p, null, true);
@@ -232,7 +232,7 @@ public class StdConditionExtractor implements ConditionExtractor {
                 conditionExpressions =
                         extractExpression(repository, conditionResource);
                 log.debug("Found " + conditionExpressions.size() +
-                        "condition expressions.");
+                        " condition expressions.");
                 
                 Set<BindingCondition> bindingConditions =
                         extractNestedBindingCondition(repository, conditionResource); //statement
