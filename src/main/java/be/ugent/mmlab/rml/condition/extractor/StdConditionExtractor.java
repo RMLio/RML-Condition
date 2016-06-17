@@ -139,7 +139,6 @@ public class StdConditionExtractor implements ConditionExtractor {
     }
 
     @Override
-    //TODO: Check if it's still in use
     public Condition extractCondition(Repository repository, 
         Set<Condition> conditions, Resource object) {
         Condition condition = null;        
@@ -236,7 +235,7 @@ public class StdConditionExtractor implements ConditionExtractor {
                 
                 Set<BindingCondition> bindingConditions =
                         extractNestedBindingCondition(repository, conditionResource); //statement
-                log.debug("found " + bindingConditions.size() + 
+                log.debug("Found " + bindingConditions.size() + 
                         " nested binding conditions." );
                 for (String conditionExpression : conditionExpressions) {
                     if (bindingConditions == null || conditionExpression == null) {

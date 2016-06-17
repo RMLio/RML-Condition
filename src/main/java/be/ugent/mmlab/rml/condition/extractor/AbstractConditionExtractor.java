@@ -46,7 +46,7 @@ public class AbstractConditionExtractor {
             }
 
             try {
-                //Extract Boolean Conditions
+                //Extract Equal Conditions
                 StdConditionExtractor conditionsExtractor =
                         new BooleanConditionExtractor();
                 Condition booleanCondition = 

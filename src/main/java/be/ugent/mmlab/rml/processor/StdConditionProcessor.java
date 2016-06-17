@@ -59,12 +59,17 @@ public class StdConditionProcessor implements ConditionProcessor {
                     result = processMatch(expression);
                     if(condition.getClass().getSimpleName().equals("StdNegationCondition"))
                         return !result;
-                } else if (expression.contains("!contain(Condition condition)")) {
+                } else if (expression.contains("!contain")) {
                     result = processNotContains(expression);
                     if (!result) {
                         break iter;
                     }
-                } else if (expression.contains("!length")) {
+                } else if (expression.contains("contain")) {
+                    result = processContains(expression);
+                    if (!result) {
+                        break iter;
+                    }
+                }else if (expression.contains("!length")) {
                     result = processNotLength(expression);
                     if (!result) {
                         break iter;
@@ -140,6 +145,23 @@ public class StdConditionProcessor implements ConditionProcessor {
         } else {
             return true;
         }
+    }
+    
+    public boolean processContains(String expression){
+        log.debug("Processing contains condition...");
+        expression = expression.replace("contains(", "").replace(")", "");
+        String[] strings = expression.split(",");
+        
+        if (strings != null && strings.length > 1) {
+            if (strings[0].contains(strings[1].replaceAll("\"", ""))) {
+                log.debug("strings[0] " + strings[0]);
+                log.debug("strings[1] " + strings[1].replaceAll("\"", ""));
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     
     public boolean processNotContains(String expression){
