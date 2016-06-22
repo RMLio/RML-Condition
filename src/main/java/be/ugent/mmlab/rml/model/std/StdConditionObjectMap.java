@@ -1,6 +1,7 @@
 package be.ugent.mmlab.rml.model.std;
 
 import be.ugent.mmlab.rml.condition.model.Condition;
+import be.ugent.mmlab.rml.model.RDFTerm.GraphMap;
 import be.ugent.mmlab.rml.model.RDFTerm.ObjectMap;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import be.ugent.mmlab.rml.model.RDFTerm.TermMap;
@@ -31,11 +32,11 @@ public class StdConditionObjectMap extends StdObjectMap implements TermMap, Obje
             LoggerFactory.getLogger(StdConditionObjectMap.class.getSimpleName());
 
     public StdConditionObjectMap(TriplesMap triplesMap, PredicateObjectMap predicateObjectMap,
-            Value constantValue, URI dataType, String languageTag,
-            String stringTemplate, URI termType, String inverseExpression,
-            ReferenceMap referenceValue, Set<Condition> condition) {
+                                 Value constantValue, URI dataType, String languageTag,
+                                 String stringTemplate, URI termType, String inverseExpression,
+                                 ReferenceMap referenceValue, Set<Condition> condition, GraphMap graphMap) {
         super(triplesMap, predicateObjectMap, constantValue, dataType, languageTag,
-                stringTemplate, termType, inverseExpression, referenceValue);
+                stringTemplate, termType, inverseExpression, referenceValue, graphMap);
         setCondition(condition);
     }
     

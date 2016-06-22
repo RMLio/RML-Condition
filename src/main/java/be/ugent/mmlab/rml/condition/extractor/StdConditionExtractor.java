@@ -69,7 +69,6 @@ public class StdConditionExtractor implements ConditionExtractor {
     
     /**
      *
-     * @param rmlMappingGraph
      * @param object
      * @param statement
      * @return
@@ -304,7 +303,6 @@ public class StdConditionExtractor implements ConditionExtractor {
      *
      * @param repository
      * @param object
-     * @param condition
      * @return
      */
     public static List<Value> extractFallback(

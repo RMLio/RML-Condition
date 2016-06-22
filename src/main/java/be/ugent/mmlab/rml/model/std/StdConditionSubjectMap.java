@@ -21,12 +21,12 @@ public class StdConditionSubjectMap extends StdSubjectMap implements TermMap, Su
     public StdConditionSubjectMap(TriplesMap ownTriplesMap, Value constantValue,
             String stringTemplate, URI termType, String inverseExpression,
             ReferenceMap referenceValue, Set<URI> classIRIs, 
-            Set<GraphMap> graphMaps, Set<Condition> conditions) {
+            GraphMap graphMap, Set<Condition> conditions) {
         // No Literal term type
         // ==> No datatype
         // ==> No specified language tag
         super(ownTriplesMap, constantValue, stringTemplate, termType,
-                inverseExpression, referenceValue, classIRIs, graphMaps );
+                inverseExpression, referenceValue, classIRIs, graphMap );
         
         setConditions(conditions);
     }
