@@ -5,6 +5,8 @@ import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.condition.model.std.StdBooleanCondition;
 import be.ugent.mmlab.rml.condition.model.std.StdNegationCondition;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
+import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
+import be.ugent.mmlab.rml.model.RDFTerm.GraphMap;
 import be.ugent.mmlab.rml.vocabularies.CRMLVocabulary;
 import be.ugent.mmlab.rml.vocabularies.RMLVocabulary;
 import java.util.ArrayList;
@@ -236,6 +238,7 @@ public class StdConditionExtractor implements ConditionExtractor {
                         extractNestedBindingCondition(repository, conditionResource); //statement
                 log.debug("Found " + bindingConditions.size() + 
                         " nested binding conditions." );
+
                 for (String conditionExpression : conditionExpressions) {
                     if (bindingConditions == null || conditionExpression == null) {
                         log.error("Error: " + conditionResource.stringValue()

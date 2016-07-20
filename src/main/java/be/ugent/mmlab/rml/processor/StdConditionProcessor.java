@@ -2,6 +2,7 @@ package be.ugent.mmlab.rml.processor;
 
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
+import be.ugent.mmlab.rml.grel.ConcreteGrelProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import java.util.HashMap;
@@ -10,6 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
+import be.ugent.mmlab.rml.model.TriplesMap;
+import org.apache.xpath.functions.Function;
+import org.openrdf.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,51 +44,73 @@ public class StdConditionProcessor implements ConditionProcessor {
             String expression = condition.getCondition();
             log.debug("expression " + expression);
             bindings = condition.getBindingConditions();
-            log.debug("There are " + bindings.size() + " bindings.");
-            for (BindingCondition binding : bindings) {
-                String replacement;
-                parameters = processBindingConditions(node, termMapProcessor, bindings);
+            if(bindings != null)
+                log.debug("There are " + bindings.size() + " bindings.");
+            if(bindings != null && bindings.size() > 0) {
+                for (BindingCondition binding : bindings) {
+                    String replacement;
+                    parameters = processBindingConditions(node, termMapProcessor, bindings);
 
-                if(parameters.size() > 0){
-                    replacement = parameters.get(binding.getVariable());
-                    expression = expression.replaceAll(
-                            "%%" + Pattern.quote(binding.getVariable()) + "%%",
-                        replacement);}
+                    if (parameters.size() > 0) {
+                        replacement = parameters.get(binding.getVariable());
+                        expression = expression.replaceAll(
+                                "%%" + Pattern.quote(binding.getVariable()) + "%%",
+                                replacement);
+                    }
 
-                //TODO: Properly handle the followings...
-                if (expression.contains("!match")) {
-                    result = processNotMatch(expression);
-                    if (!result) {
-                        break iter;
+                    //TODO: Properly handle the followings...
+                    if (expression.contains("!match")) {
+                        result = processNotMatch(expression);
+                        if (!result) {
+                            break iter;
+                        }
+                    } else if (expression.contains("match")) {
+                        result = processMatch(expression);
+                        if (condition.getClass().getSimpleName().equals("StdNegationCondition"))
+                            return !result;
+                    } else if (expression.contains("!contain")) {
+                        result = processNotContains(expression);
+                        if (!result) {
+                            break iter;
+                        }
+                    } else if (expression.contains("contain")) {
+                        result = processContains(expression);
+                        if (!result) {
+                            break iter;
+                        }
+                    } else if (expression.contains("!length")) {
+                        result = processNotLength(expression);
+                        if (!result) {
+                            break iter;
+                        }
+                    } else if (expression.contains("hasField")) {
+                        if (parameters.size() == 0)
+                            return false;
+                        else
+                            return true;
+                        //result = processHasField(expression);
+                        //if (!result) {
+                        //    break iter;
+                        //}
                     }
-                } else if (expression.contains("match")) {
-                    result = processMatch(expression);
-                    if(condition.getClass().getSimpleName().equals("StdNegationCondition"))
-                        return !result;
-                } else if (expression.contains("!contain")) {
-                    result = processNotContains(expression);
-                    if (!result) {
-                        break iter;
+                }
+            }
+            else{
+                Set<FunctionTermMap> funTermMaps = condition.getFunctionTermMaps();
+                for(FunctionTermMap funTermMap : funTermMaps){
+                    TriplesMap funTM = funTermMap.getFunctionTriplesMap();
+                    Set<PredicateObjectMap> funPOMs = funTM.getPredicateObjectMaps();
+                    for(PredicateObjectMap funPOM : funPOMs){
+                        Value predicate = funPOM.getPredicateMaps().iterator().next().getConstantValue();
+                        if(predicate.stringValue().contains("executes")){
+                            if(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue().contains("isSet")){
+                                ConcreteGrelProcessor grel = new ConcreteGrelProcessor();
+                                String resultString = grel.isSet(funTermMap.getParameterRefs());
+                                result = Boolean.valueOf(resultString);
+                            }
+
+                        }
                     }
-                } else if (expression.contains("contain")) {
-                    result = processContains(expression);
-                    if (!result) {
-                        break iter;
-                    }
-                }else if (expression.contains("!length")) {
-                    result = processNotLength(expression);
-                    if (!result) {
-                        break iter;
-                    }
-                }else if (expression.contains("hasField")) {
-                    if(parameters.size()==0)
-                        return false;
-                    else
-                        return true;
-                    //result = processHasField(expression);
-                    //if (!result) {
-                    //    break iter;
-                    //}
                 }
             }
         }
