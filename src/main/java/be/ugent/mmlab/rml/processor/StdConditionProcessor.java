@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
