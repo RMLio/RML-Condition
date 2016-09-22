@@ -11,7 +11,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -42,7 +42,7 @@ public class BindingConditionExtractor extends StdConditionExtractor {
         RepositoryConnection connection = repository.getConnection();
         ValueFactory vf = connection.getValueFactory();
         
-        URI p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE 
+        IRI p = vf.createIRI(CRMLVocabulary.CRML_NAMESPACE
                 + CRMLVocabulary.cRMLTerm.BINDING_CONDITION);
         RepositoryResult<Statement> statements = 
                 connection.getStatements(object, p, null, true);
@@ -88,7 +88,7 @@ public class BindingConditionExtractor extends StdConditionExtractor {
             Resource values = (Resource) statement.getObject();
             
             //retrieves value
-            URI p = vf.createURI(
+            IRI p = vf.createIRI(
                     CRMLVocabulary.CRML_NAMESPACE 
                     + CRMLVocabulary.cRMLTerm.VARIABLE);
 
