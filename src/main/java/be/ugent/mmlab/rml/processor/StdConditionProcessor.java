@@ -2,7 +2,7 @@ package be.ugent.mmlab.rml.processor;
 
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
-import be.ugent.mmlab.rml.grel.ConcreteGrelProcessor;
+import be.ugent.mmlab.rml.function.ConcreteFunctionProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import java.util.HashMap;
@@ -28,6 +28,8 @@ public class StdConditionProcessor implements ConditionProcessor {
     // Log
     private static final Logger log = 
             LoggerFactory.getLogger(StdConditionProcessor.class.getSimpleName());
+
+    private final ConcreteFunctionProcessor fnProcessor = new ConcreteFunctionProcessor();
 
     @Override
     public boolean processConditions(Object node, TermMapProcessor termMapProcessor, 
@@ -102,12 +104,8 @@ public class StdConditionProcessor implements ConditionProcessor {
                     for(PredicateObjectMap funPOM : funPOMs){
                         Value predicate = funPOM.getPredicateMaps().iterator().next().getConstantValue();
                         if(predicate.stringValue().contains("executes")){
-                            if(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue().contains("isSet")){
-                                ConcreteGrelProcessor grel = new ConcreteGrelProcessor();
-                                String resultString = grel.isSet(funTermMap.getParameterRefs());
-                                result = Boolean.valueOf(resultString);
-                            }
-
+                            String resultString = this.fnProcessor.processFunction(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue(), funTermMap.getParameterRefs());
+                            result = Boolean.valueOf(resultString);
                         }
                     }
                 }
