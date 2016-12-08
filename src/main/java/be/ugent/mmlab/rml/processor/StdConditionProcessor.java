@@ -29,7 +29,7 @@ public class StdConditionProcessor implements ConditionProcessor {
     private static final Logger log = 
             LoggerFactory.getLogger(StdConditionProcessor.class.getSimpleName());
 
-    private final ConcreteFunctionProcessor fnProcessor = new ConcreteFunctionProcessor();
+    private final ConcreteFunctionProcessor fnProcessor = ConcreteFunctionProcessor.getInstance();
 
     @Override
     public boolean processConditions(Object node, TermMapProcessor termMapProcessor, 
@@ -104,8 +104,9 @@ public class StdConditionProcessor implements ConditionProcessor {
                     for(PredicateObjectMap funPOM : funPOMs){
                         Value predicate = funPOM.getPredicateMaps().iterator().next().getConstantValue();
                         if(predicate.stringValue().contains("executes")){
-                            String resultString = this.fnProcessor.processFunction(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue(), funTermMap.getParameterRefs());
-                            result = Boolean.valueOf(resultString);
+                            //String resultString = this.fnProcessor.processFunction(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue(), funTermMap.getParameterRefs());
+                            ///result = Boolean.valueOf(resultString);
+                            //TODO:wmaroy fix to multiple values
                         }
                     }
                 }
