@@ -5,15 +5,13 @@ import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.function.ConcreteFunctionProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 import java.util.regex.Pattern;
 
 import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
+import javafx.beans.binding.BooleanBinding;
 import org.eclipse.rdf4j.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,8 +102,8 @@ public class StdConditionProcessor implements ConditionProcessor {
                     for(PredicateObjectMap funPOM : funPOMs){
                         Value predicate = funPOM.getPredicateMaps().iterator().next().getConstantValue();
                         if(predicate.stringValue().contains("executes")){
-                            //String resultString = this.fnProcessor.processFunction(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue(), funTermMap.getParameterRefs());
-                            ///result = Boolean.valueOf(resultString);
+                            ArrayList<String> values = this.fnProcessor.processFunction(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue(), funTermMap.getParameterRefs());
+                            result = Boolean.valueOf(values.get(0));
                             //TODO:wmaroy fix to multiple values
                         }
                     }
