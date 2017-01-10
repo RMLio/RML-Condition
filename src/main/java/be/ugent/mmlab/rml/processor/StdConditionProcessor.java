@@ -4,6 +4,7 @@ import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.function.ConcreteFunctionProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
+import be.ugent.mmlab.rml.logicalsourcehandler.termmap.concrete.*;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 
 import java.util.*;
@@ -11,6 +12,8 @@ import java.util.regex.Pattern;
 
 import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
+import be.ugent.mmlab.rml.vocabularies.FnVocabulary;
+import be.ugent.mmlab.rml.vocabularies.QLVocabulary;
 import javafx.beans.binding.BooleanBinding;
 import org.eclipse.rdf4j.model.Value;
 import org.slf4j.Logger;
@@ -96,17 +99,15 @@ public class StdConditionProcessor implements ConditionProcessor {
             }
             else{
                 Set<FunctionTermMap> funTermMaps = condition.getFunctionTermMaps();
-                for(FunctionTermMap funTermMap : funTermMaps){
-                    TriplesMap funTM = funTermMap.getFunctionTriplesMap();
-                    Set<PredicateObjectMap> funPOMs = funTM.getPredicateObjectMaps();
-                    for(PredicateObjectMap funPOM : funPOMs){
-                        Value predicate = funPOM.getPredicateMaps().iterator().next().getConstantValue();
-                        if(predicate.stringValue().contains("executes")){
-                            ArrayList<String> values = this.fnProcessor.processFunction(funPOM.getObjectMaps().iterator().next().getConstantValue().stringValue(), funTermMap.getParameterRefs());
-                            result = Boolean.valueOf(values.get(0));
-                            //TODO:wmaroy fix to multiple values
-                        }
-                    }
+
+                for(FunctionTermMap functionTermMap : funTermMaps){
+                    parameters = retrieveParameters(node, functionTermMap.getFunctionTriplesMap());
+                    String function = functionTermMap.getFunction().toString();
+
+                    List<String> values = termMapProcessor.processFunctionTermMap(
+                            functionTermMap, node, function, parameters);
+                    result = Boolean.valueOf(values.get(0));
+                    //TODO:wmaroy fix to multiple values
                 }
             }
         }
@@ -230,6 +231,67 @@ public class StdConditionProcessor implements ConditionProcessor {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private Map<String,String> retrieveParameters(Object node, TriplesMap functionTriplesMap){
+        Map<String,String> parameters = new HashMap<String, String>();
+        TermMapProcessor termMapProcessor = create(functionTriplesMap.getLogicalSource().getReferenceFormulation());
+
+        String referenceValue;
+        String constantValue;
+        Set<PredicateObjectMap> poms = functionTriplesMap.getPredicateObjectMaps();
+        for(PredicateObjectMap pom : poms) {
+            Value property = pom.getPredicateMaps().iterator().next().getConstantValue();
+            String executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
+            if(!property.stringValue().equals(executes)){
+                Value parameter = pom.getPredicateMaps().iterator().next().getConstantValue();
+                try {
+                    referenceValue = pom.getObjectMaps().iterator().next().getReferenceMap().getReference();
+                } catch(Exception e) {
+                    referenceValue = null;
+                    System.err.println("No reference");
+                }
+                try {
+                    constantValue = pom.getObjectMaps().iterator().next().getConstantValue().stringValue();
+                } catch(Exception e) {
+                    constantValue = null;
+                    System.err.println("No constant value");
+                }
+                if(referenceValue != null) {
+                    List<String> value = termMapProcessor.extractValueFromNode(node, referenceValue);
+                    if(value.size() != 0) {
+                        parameters.put(parameter.stringValue(), value.get(0));
+                    }
+                } else if(constantValue != null) {
+                    parameters.put(parameter.stringValue(), constantValue);
+                }
+                //TODO from wmaroy: how to avoid this check?
+            }
+        }
+
+        return parameters;
+    }
+
+    public TermMapProcessor create(QLVocabulary.QLTerm term) {
+        switch (term){
+            case XPATH_CLASS:
+                return new XPathTermMapProcessor();
+            case CSV_CLASS:
+                return new CSVTermMapProcessor();
+            case JSONPATH_CLASS:
+                return new JSONPathTermMapProcessor();
+            case CSS3_CLASS:
+                return new CSS3TermMapProcessor();
+            case XLS_CLASS:
+                return new CSVTermMapProcessor();
+            case XLSX_CLASS:
+                return new CSVTermMapProcessor();
+            case DBPEDIA_CLASS:
+                return new DBpediaTermMapProcessor();
+            default:
+                log.error("The term " + term + "was not defined.");
+                return null;
         }
     }
 }
