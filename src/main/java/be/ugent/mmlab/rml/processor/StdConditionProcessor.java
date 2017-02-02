@@ -16,6 +16,7 @@ import be.ugent.mmlab.rml.vocabularies.FnVocabulary;
 import be.ugent.mmlab.rml.vocabularies.QLVocabulary;
 import javafx.beans.binding.BooleanBinding;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.BooleanLiteral;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,9 +105,9 @@ public class StdConditionProcessor implements ConditionProcessor {
                     parameters = retrieveParameters(node, functionTermMap.getFunctionTriplesMap());
                     String function = functionTermMap.getFunction().toString();
 
-                    List<String> values = termMapProcessor.processFunctionTermMap(
+                    List<Value> values = termMapProcessor.processFunctionTermMap(
                             functionTermMap, node, function, parameters);
-                    result = Boolean.valueOf(values.get(0));
+                    result = ((BooleanLiteral)values.get(0)).booleanValue();
                     //TODO:wmaroy fix to multiple values
                 }
             }
