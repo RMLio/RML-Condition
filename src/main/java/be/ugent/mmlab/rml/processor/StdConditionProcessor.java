@@ -14,7 +14,6 @@ import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.vocabularies.FnVocabulary;
 import be.ugent.mmlab.rml.vocabularies.QLVocabulary;
-import javafx.beans.binding.BooleanBinding;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.BooleanLiteral;
 import org.slf4j.Logger;
@@ -266,6 +265,9 @@ public class StdConditionProcessor implements ConditionProcessor {
                     }
                 } else if(constantValue != null) {
                     parameters.put(parameter.stringValue(), constantValue);
+                } else {
+                    // no value is present for this parameter, enter null
+                    parameters.put(parameter.stringValue(), "null"); //TODO wmaroy: change to proper uri for null
                 }
                 //TODO from wmaroy: how to avoid this check?
             }
