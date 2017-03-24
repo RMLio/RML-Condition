@@ -1,6 +1,7 @@
 package be.ugent.mmlab.rml.condition.model;
 
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
+import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.RDFTerm.ReferencingObjectMap;
 import java.util.Set;
 
@@ -63,5 +64,9 @@ abstract public interface Condition {
      * @param predicateObjectMap
      */
     public void setFallback(PredicateObjectMap predicateObjectMap);
+
+    public Set<FunctionTermMap> getFunctionTermMaps();
+
+    public void setFunctionTermMaps(Set<FunctionTermMap> functionTermMaps);
     
 }

@@ -5,6 +5,8 @@ import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.condition.model.BooleanCondition;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import java.util.Set;
+
+import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -20,6 +22,7 @@ public class StdBooleanCondition extends StdCondition implements BooleanConditio
             LogManager.getLogger(StdBooleanCondition.class.getSimpleName());
     
     private PredicateObjectMap fallback;
+    private FunctionTermMap funTermMap ;
     
     /**
      *
@@ -39,6 +42,18 @@ public class StdBooleanCondition extends StdCondition implements BooleanConditio
         setNestedBindingConditions(bindingConditions);
         //setNestedConditions(bindingConditions);
         //setValue(value);
+    }
+
+    public StdBooleanCondition(String condition,
+                               Set<BindingCondition> bindingConditions,
+                               Set<FunctionTermMap> functionTermMaps) throws Exception {
+        setCondition(condition);
+        setNestedBindingConditions(bindingConditions);
+        setFunctionTermMaps(functionTermMaps);
+    }
+
+    public StdBooleanCondition(Set<FunctionTermMap> functionTermMaps){
+        setFunctionTermMaps(functionTermMaps);
     }
     
     /**
@@ -82,5 +97,15 @@ public class StdBooleanCondition extends StdCondition implements BooleanConditio
     public void setFallback(PredicateObjectMap fallback){
         this.fallback = fallback;
     }
-    
+
+    @Override
+    public Set<FunctionTermMap> getFunctionTermMaps() {
+        return this.functionTermMaps;
+    }
+
+    public  void setFunctionTermMaps(Set<FunctionTermMap> functions) { this.functionTermMaps = functions; }
+
+    public void setFunTermMaps(FunctionTermMap funTermMap) {
+        this.funTermMap = funTermMap;
+    }
 }
