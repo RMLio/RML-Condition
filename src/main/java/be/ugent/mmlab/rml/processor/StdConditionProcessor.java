@@ -250,13 +250,13 @@ public class StdConditionProcessor implements ConditionProcessor {
                     referenceValue = pom.getObjectMaps().iterator().next().getReferenceMap().getReference();
                 } catch(Exception e) {
                     referenceValue = null;
-                    System.err.println("No reference");
+                    log.debug("No reference");
                 }
                 try {
                     constantValue = pom.getObjectMaps().iterator().next().getConstantValue().stringValue();
                 } catch(Exception e) {
                     constantValue = null;
-                    System.err.println("No constant value");
+                    log.debug("No constant value");
                 }
                 if(referenceValue != null) {
                     List<String> value = termMapProcessor.extractValueFromNode(node, referenceValue);

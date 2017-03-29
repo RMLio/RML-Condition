@@ -26,7 +26,7 @@ public class StdConditionSubjectMap extends StdSubjectMap implements TermMap, Su
         // ==> No datatype
         // ==> No specified language tag
         super(ownTriplesMap, constantValue, stringTemplate, termType,
-                inverseExpression, referenceValue, classIRIs, graphMap );
+                inverseExpression, referenceValue, classIRIs, graphMap, null);
         
         setConditions(conditions);
     }
