@@ -7,8 +7,8 @@ import be.ugent.mmlab.rml.model.RDFTerm.TermMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.model.termMap.ReferenceMap;
 import java.util.Set;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
 
 /**
  * RML Processor
@@ -19,14 +19,14 @@ public class StdConditionSubjectMap extends StdSubjectMap implements TermMap, Su
     Set<Condition> conditions;
 
     public StdConditionSubjectMap(TriplesMap ownTriplesMap, Value constantValue,
-            String stringTemplate, URI termType, String inverseExpression,
-            ReferenceMap referenceValue, Set<URI> classIRIs, 
-            Set<GraphMap> graphMaps, Set<Condition> conditions) {
+            String stringTemplate, IRI termType, String inverseExpression,
+            ReferenceMap referenceValue, Set<IRI> classIRIs,
+            GraphMap graphMap, Set<Condition> conditions) {
         // No Literal term type
         // ==> No datatype
         // ==> No specified language tag
         super(ownTriplesMap, constantValue, stringTemplate, termType,
-                inverseExpression, referenceValue, classIRIs, graphMaps );
+                inverseExpression, referenceValue, classIRIs, graphMap );
         
         setConditions(conditions);
     }
