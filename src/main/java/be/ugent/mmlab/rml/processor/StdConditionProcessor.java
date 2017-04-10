@@ -106,8 +106,13 @@ public class StdConditionProcessor implements ConditionProcessor {
 
                     List<Value> values = termMapProcessor.processFunctionTermMap(
                             functionTermMap, node, function, parameters);
-                    result = ((BooleanLiteral)values.get(0)).booleanValue();
-                    //TODO:wmaroy fix to multiple values
+                    if (values.size() == 0) {
+                        return false;
+                    }
+                    else {
+                        result = ((BooleanLiteral) values.get(0)).booleanValue();
+                        //TODO:wmaroy fix to multiple values
+                    }
                 }
             }
         }
@@ -250,13 +255,13 @@ public class StdConditionProcessor implements ConditionProcessor {
                     referenceValue = pom.getObjectMaps().iterator().next().getReferenceMap().getReference();
                 } catch(Exception e) {
                     referenceValue = null;
-                    System.err.println("No reference");
+                    log.debug("No reference");
                 }
                 try {
                     constantValue = pom.getObjectMaps().iterator().next().getConstantValue().stringValue();
                 } catch(Exception e) {
                     constantValue = null;
-                    System.err.println("No constant value");
+                    log.debug("No constant value");
                 }
                 if(referenceValue != null) {
                     List<String> value = termMapProcessor.extractValueFromNode(node, referenceValue);
