@@ -36,7 +36,7 @@ public class StdConditionProcessor implements ConditionProcessor {
     public boolean processConditions(Object node, TermMapProcessor termMapProcessor, 
             Set<Condition> conditions) {
         Set<BindingCondition> bindings = new HashSet<BindingCondition>();
-        Map<String, String> parameters;
+        Map<String, Object> parameters;
         boolean result = false;
         log.debug("There are " + conditions.size() + " conditions...");
         iter: for (Condition condition : conditions) {
@@ -54,7 +54,7 @@ public class StdConditionProcessor implements ConditionProcessor {
                     parameters = processBindingConditions(node, termMapProcessor, bindings);
 
                     if (parameters.size() > 0) {
-                        replacement = parameters.get(binding.getVariable());
+                        replacement = (String) parameters.get(binding.getVariable());
                         expression = expression.replaceAll(
                                 "%%" + Pattern.quote(binding.getVariable()) + "%%",
                                 replacement);
@@ -96,8 +96,7 @@ public class StdConditionProcessor implements ConditionProcessor {
                         //}
                     }
                 }
-            }
-            else{
+            } else {
                 Set<FunctionTermMap> funTermMaps = condition.getFunctionTermMaps();
 
                 for(FunctionTermMap functionTermMap : funTermMaps){
@@ -114,10 +113,10 @@ public class StdConditionProcessor implements ConditionProcessor {
         return result;
     }
 
-    public Map<String, String> processBindingConditions(Object node, 
-            TermMapProcessor termMapProcessor, Set<BindingCondition> bindingConditions) {
-        Map<String, String> parameters = new HashMap<String, String>();
-        
+    public Map<String, Object> processBindingConditions(Object node,
+                                                        TermMapProcessor termMapProcessor, Set<BindingCondition> bindingConditions) {
+        Map<String, Object> parameters = new HashMap<>();
+
         for (BindingCondition bindingCondition : bindingConditions) {
             List<String> childValues = termMapProcessor.
                     extractValueFromNode(node, bindingCondition.getReference());
@@ -234,8 +233,8 @@ public class StdConditionProcessor implements ConditionProcessor {
         }
     }
 
-    private Map<String,String> retrieveParameters(Object node, TriplesMap functionTriplesMap){
-        Map<String,String> parameters = new HashMap<String, String>();
+    private Map<String, Object> retrieveParameters(Object node, TriplesMap functionTriplesMap) {
+        Map<String, Object> parameters = new HashMap<>();
         TermMapProcessor termMapProcessor = create(functionTriplesMap.getLogicalSource().getReferenceFormulation());
 
         String referenceValue;
