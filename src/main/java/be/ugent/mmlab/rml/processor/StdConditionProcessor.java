@@ -105,8 +105,13 @@ public class StdConditionProcessor implements ConditionProcessor {
 
                     List<Value> values = termMapProcessor.processFunctionTermMap(
                             functionTermMap, node, function, parameters);
-                    result = ((BooleanLiteral)values.get(0)).booleanValue();
-                    //TODO:wmaroy fix to multiple values
+                    if (values.size() == 0) {
+                        return false;
+                    }
+                    else {
+                        result = ((BooleanLiteral) values.get(0)).booleanValue();
+                        //TODO:wmaroy fix to multiple values
+                    }
                 }
             }
         }
