@@ -85,7 +85,9 @@ public class StdConditionProcessor implements ConditionProcessor {
                         if (!result) {
                             break iter;
                         }
-                    } else if (expression.contains("hasField")) {
+                    } else if (expression.contains("!hasField")) {
+                       return parameters.size() == 0;
+		    } else if (expression.contains("hasField")) {
                         if (parameters.size() == 0)
                             return false;
                         else
