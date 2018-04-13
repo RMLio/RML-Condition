@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 /**
  * RML - Conditions : ConditionExtractor
@@ -45,7 +45,7 @@ public class StdConditionExtractor implements ConditionExtractor {
             Resource values = (Resource) statement.getObject();
             
             //retrieves value
-            URI p = vf.createURI(
+            IRI p = vf.createIRI(
                     CRMLVocabulary.CRML_NAMESPACE 
                     + CRMLVocabulary.cRMLTerm.VALUE);
 
@@ -84,7 +84,7 @@ public class StdConditionExtractor implements ConditionExtractor {
             RepositoryConnection connection = repository.getConnection();
             ValueFactory vf = connection.getValueFactory();
             //retrieves value
-            URI p = vf.createURI(RMLVocabulary.RML_NAMESPACE 
+            IRI p = vf.createIRI(RMLVocabulary.RML_NAMESPACE
                     + RMLVocabulary.RMLTerm.REFERENCE);
             RepositoryResult<Statement> statements = 
                     connection.getStatements(values, p, null, true);
@@ -115,7 +115,7 @@ public class StdConditionExtractor implements ConditionExtractor {
             //Resource values = (Resource) statement.getObject();
             
             //retrieves value
-            URI p = vf.createURI(
+            IRI p = vf.createIRI(
                     CRMLVocabulary.CRML_NAMESPACE 
                     + CRMLVocabulary.cRMLTerm.CONDITION);
 
@@ -145,14 +145,14 @@ public class StdConditionExtractor implements ConditionExtractor {
             RepositoryConnection connection = repository.getConnection();
             //extract boolean condition
             ValueFactory vf = connection.getValueFactory();
-            URI p = null;
+            IRI p = null;
             String conditionType = this.getClass().getSimpleName();
             
             switch (conditionType) {
                 case "BooleanConditionExtractor":
                     log.debug("Extracting Equality Conditions..");
                     // Extract boolean condition
-                    p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
+                    p = vf.createIRI(CRMLVocabulary.CRML_NAMESPACE
                             + CRMLVocabulary.cRMLTerm.BOOLEAN_CONDITION);
                     //condition = extractBooleanCondition(
                     //          connection, repository, p, object, conditions);
@@ -160,7 +160,7 @@ public class StdConditionExtractor implements ConditionExtractor {
                case "NegationConditionExtractor":
                     log.debug("Extracting Negation Conditions..");
                     // Extract negation condition
-                    p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
+                    p = vf.createIRI(CRMLVocabulary.CRML_NAMESPACE
                             + CRMLVocabulary.cRMLTerm.NEGATION_CONDITION);
                     //extractBooleanCondition(
                     //        connection, repository, p, object,conditions);
@@ -168,7 +168,7 @@ public class StdConditionExtractor implements ConditionExtractor {
                case "ProcessConditionExtractor":
                     log.debug("Extracting Processing Conditions..");
                     // Extract processing condition
-                    p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
+                    p = vf.createIRI(CRMLVocabulary.CRML_NAMESPACE
                             + CRMLVocabulary.cRMLTerm.PROCESS_CONDITION);
                     break;
                default:
@@ -193,7 +193,7 @@ public class StdConditionExtractor implements ConditionExtractor {
         try {
             RepositoryConnection connection = repository.getConnection();
             ValueFactory vf = connection.getValueFactory();
-            URI p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE
+            IRI p = vf.createIRI(CRMLVocabulary.CRML_NAMESPACE
                                 + CRMLVocabulary.cRMLTerm.BOOLEAN_CONDITION);
             
             RepositoryResult<Statement> statements =
@@ -236,6 +236,7 @@ public class StdConditionExtractor implements ConditionExtractor {
                         extractNestedBindingCondition(repository, conditionResource); //statement
                 log.debug("Found " + bindingConditions.size() + 
                         " nested binding conditions." );
+
                 for (String conditionExpression : conditionExpressions) {
                     if (bindingConditions == null || conditionExpression == null) {
                         log.error("Error: " + conditionResource.stringValue()
@@ -243,7 +244,7 @@ public class StdConditionExtractor implements ConditionExtractor {
                     }
                     //Now it considers only one fallback
                     //TODO: change it to accept multiple?
-                    URI p = vf.createURI(CRMLVocabulary.CRML_NAMESPACE + 
+                    IRI p = vf.createIRI(CRMLVocabulary.CRML_NAMESPACE +
                             CRMLVocabulary.cRMLTerm.BOOLEAN_CONDITION);
                     condition = extractConditionDetails(repository, 
                             bindingConditions, conditionExpression, p, conditionResource);
@@ -281,7 +282,7 @@ public class StdConditionExtractor implements ConditionExtractor {
      */
     public Condition extractConditionDetails(Repository repository, 
             Set<BindingCondition> bindingConditions, //Set<Condition> conditions, 
-            String conditionExpression, URI p, Resource object) {
+            String conditionExpression, IRI p, Resource object) {
         Condition newCondition = null;
         log.debug("Extracting Condition Details...");
         try {
@@ -314,7 +315,7 @@ public class StdConditionExtractor implements ConditionExtractor {
             ValueFactory vf = connection.getValueFactory();
 
             //retrieves value
-            URI p = vf.createURI(
+            IRI p = vf.createIRI(
                     CRMLVocabulary.CRML_NAMESPACE 
                     + CRMLVocabulary.cRMLTerm.FALLBACK);
 

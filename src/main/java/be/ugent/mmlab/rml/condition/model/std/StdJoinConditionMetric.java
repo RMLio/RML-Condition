@@ -2,7 +2,7 @@
 package be.ugent.mmlab.rml.condition.model.std;
 
 import be.ugent.mmlab.rml.model.std.StdJoinCondition;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

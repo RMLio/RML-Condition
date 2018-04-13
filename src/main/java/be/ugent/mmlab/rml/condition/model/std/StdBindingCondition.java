@@ -4,6 +4,8 @@ import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import java.util.Set;
+
+import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -21,8 +23,6 @@ public class StdBindingCondition extends StdCondition implements BindingConditio
     
     /**
      *
-     * @param condition
-     * @param value
      * @throws Exception
      */
     public StdBindingCondition(String variable, String reference) {
@@ -90,5 +90,16 @@ public class StdBindingCondition extends StdCondition implements BindingConditio
     public void setFallback(PredicateObjectMap predicateObjectMap) {
         log.debug("Not supported yet."); 
     }
-    
+
+    @Override
+    public Set<FunctionTermMap> getFunctionTermMaps() {
+        log.error("Not supported yet.");
+        return null;
+    }
+
+    @Override
+    public void setFunctionTermMaps(Set<FunctionTermMap> functionTermMaps) {
+
+    }
+
 }

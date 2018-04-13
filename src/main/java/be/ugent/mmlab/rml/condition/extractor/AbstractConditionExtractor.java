@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.openrdf.model.Resource;
-import org.openrdf.repository.Repository;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.repository.Repository;
 
 /**
  * RML Processor

@@ -2,8 +2,8 @@ package be.ugent.mmlab.rml.condition.extractor;
 
 import be.ugent.mmlab.rml.condition.model.Condition;
 import java.util.Set;
-import org.openrdf.model.Resource;
-import org.openrdf.repository.Repository;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.repository.Repository;
 
 /**
  *

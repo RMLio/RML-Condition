@@ -2,6 +2,7 @@ package be.ugent.mmlab.rml.condition.model.std;
 
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
+import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.RDFTerm.ReferencingObjectMap;
 import java.util.Set;
 import org.apache.log4j.LogManager;
@@ -23,7 +24,9 @@ public class StdCondition {
     
     protected Set<Condition> nestedConditions ;
     protected Set<BindingCondition> bindingConditions ;
+    protected Set<FunctionTermMap> functionTermMaps ;
     protected ReferencingObjectMap refObjMap;
+
     
     /**
      *
