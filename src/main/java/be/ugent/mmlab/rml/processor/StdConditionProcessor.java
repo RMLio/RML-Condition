@@ -2,7 +2,7 @@ package be.ugent.mmlab.rml.processor;
 
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
-import be.ugent.mmlab.rml.function.ConcreteFunctionProcessor;
+import be.ugent.mmlab.fno.java.ConcreteFunctionProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.concrete.*;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
@@ -107,8 +107,13 @@ public class StdConditionProcessor implements ConditionProcessor {
 
                     List<Value> values = termMapProcessor.processFunctionTermMap(
                             functionTermMap, node, function, parameters);
-                    result = ((BooleanLiteral)values.get(0)).booleanValue();
-                    //TODO:wmaroy fix to multiple values
+                    if (values.size() == 0) {
+                        return false;
+                    }
+                    else {
+                        result = ((BooleanLiteral) values.get(0)).booleanValue();
+                        //TODO:wmaroy fix to multiple values
+                    }
                 }
             }
         }
