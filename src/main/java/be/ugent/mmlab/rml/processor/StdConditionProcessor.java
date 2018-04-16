@@ -247,29 +247,29 @@ public class StdConditionProcessor implements ConditionProcessor {
         String referenceValue;
         String constantValue;
         Set<PredicateObjectMap> poms = functionTriplesMap.getPredicateObjectMaps();
-        for(PredicateObjectMap pom : poms) {
+        for (PredicateObjectMap pom : poms) {
             Value property = pom.getPredicateMaps().iterator().next().getConstantValue();
             String executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
-            if(!property.stringValue().equals(executes)){
+            if (!property.stringValue().equals(executes)) {
                 Value parameter = pom.getPredicateMaps().iterator().next().getConstantValue();
                 try {
                     referenceValue = pom.getObjectMaps().iterator().next().getReferenceMap().getReference();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     referenceValue = null;
                     log.debug("No reference");
                 }
                 try {
                     constantValue = pom.getObjectMaps().iterator().next().getConstantValue().stringValue();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     constantValue = null;
                     log.debug("No constant value");
                 }
-                if(referenceValue != null) {
+                if (referenceValue != null) {
                     List<String> value = termMapProcessor.extractValueFromNode(node, referenceValue);
-                    if(value.size() != 0) {
+                    if (value.size() != 0) {
                         parameters.put(parameter.stringValue(), value.get(0));
                     }
-                } else if(constantValue != null) {
+                } else if (constantValue != null) {
                     parameters.put(parameter.stringValue(), constantValue);
                 } else {
                     // no value is present for this parameter, enter null
@@ -283,6 +283,7 @@ public class StdConditionProcessor implements ConditionProcessor {
     }
 
     public TermMapProcessor create(QLVocabulary.QLTerm term) {
+        //TODO: Make CSVTermMap more generic
         switch (term){
             case XPATH_CLASS:
                 return new XPathTermMapProcessor();
